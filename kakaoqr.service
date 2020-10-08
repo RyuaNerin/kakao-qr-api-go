@@ -1,0 +1,20 @@
+[Unit]
+Description=Kakao Check-in QR API
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/kakaoqr/kakaoqr
+WorkingDirectory=/usr/local/kakaoqr/
+
+Restart=always
+
+#StandardOutput=null
+#StandardError=null
+
+User=kakaoqr
+Group=nobody
+
+[Install]
+WantedBy=multi-user.target
