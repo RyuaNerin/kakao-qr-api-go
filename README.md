@@ -14,6 +14,8 @@ AWS 서버를 사용하지 않고 활용하고자 만들었습니다.
 
 - 생성된 QR 코드는 14초간 보관합니다.
 
+- 서버에서 QR 코드 이미지를 생성하도록 할 수 있습니다.
+
 [![시연영상](https://raw.githubusercontent.com/kiding/kakao-qr-api/main/images/shortcuts.gif)](https://github.com/kiding/kakao-qr-api)
 
 ## 설치하기
