@@ -74,8 +74,16 @@ func main() {
 	)
 	defer cancel()
 
-	l, err := net.Listen("tcp", cfg.Bind)
-	if err != nil {
+	var l net.Listener
+	if _, _, err = net.SplitHostPort(cfg.Bind); err == nil {
+		l, err = net.Listen("tcp", cfg.Bind)
+	} else {
+		if _, err := os.Stat(cfg.Bind); os.IsExist(err) {
+			err = os.Remove(cfg.Bind)
+			panicn(err)
+		}
+
+		log.Printf("unix : %s\n", cfg.Bind)
 		l, err = net.Listen("unix", cfg.Bind)
 		panicn(err)
 
