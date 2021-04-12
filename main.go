@@ -78,7 +78,7 @@ func main() {
 	if _, _, err = net.SplitHostPort(cfg.Bind); err == nil {
 		l, err = net.Listen("tcp", cfg.Bind)
 	} else {
-		if _, err := os.Stat(cfg.Bind); os.IsExist(err) {
+		if _, err := os.Stat(cfg.Bind); !os.IsNotExist(err) {
 			err = os.Remove(cfg.Bind)
 			panicn(err)
 		}
