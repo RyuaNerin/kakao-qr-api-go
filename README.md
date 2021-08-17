@@ -30,7 +30,7 @@ AWS 서버를 사용하지 않고 활용하고자 만들었습니다.
 
 1. [Golang](https://golang.org/) 설치
 
-    - 개발 환경 : `go 1.15.2`
+    - 개발 환경 : `go 1.17`
 
 1. Chromium 설치
 

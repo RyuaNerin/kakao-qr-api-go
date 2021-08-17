@@ -13,7 +13,3 @@ func s2b(s string) (b []byte) {
 	bh.Cap = sh.Len
 	return b
 }
-
-func b2s(b []byte) (s string) {
-	return *(*string)(unsafe.Pointer(&b))
-}

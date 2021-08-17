@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -49,26 +50,23 @@ var (
 	tokenCacheExpires time.Time
 	tokenCacheLock    sync.Mutex
 
-	httpClient http.Client
+	httpClient = http.Client{
+		Transport: &http.Transport{},
+	}
 )
 
 func main() {
+	if rootCAs != nil {
+		httpClient.Transport.(*http.Transport).TLSClientConfig = &tls.Config{
+			RootCAs: rootCAs,
+		}
+	}
+
 	cfg = loadConfig()
 
 	dpUserDir, err := ioutil.TempDir("", "tmp-kakaoqr-userdata-*")
 	panicn(err)
 	defer os.RemoveAll(dpUserDir)
-
-	if cfg.Proxy != "" {
-		if tcpProxy, err := net.DialTimeout("tcp", cfg.Proxy, time.Second); err == nil {
-			tcpProxy.Close()
-
-			proxyURL, _ := url.Parse("http://" + cfg.Proxy)
-			httpClient.Transport = &http.Transport{
-				Proxy: http.ProxyURL(proxyURL),
-			}
-		}
-	}
 
 	// Init Chromium
 	dpOpts := []chromedp.ExecAllocatorOption{
@@ -81,7 +79,13 @@ func main() {
 		chromedp.DisableGPU,
 	}
 	if cfg.Proxy != "" {
-		dpOpts = append(dpOpts, chromedp.ProxyServer(cfg.Proxy))
+		if tcpProxy, err := net.DialTimeout("tcp", cfg.Proxy, time.Second); err == nil {
+			tcpProxy.Close()
+
+			proxyURL, _ := url.Parse("http://" + cfg.Proxy)
+			httpClient.Transport.(*http.Transport).Proxy = http.ProxyURL(proxyURL)
+			dpOpts = append(dpOpts, chromedp.ProxyServer(cfg.Proxy))
+		}
 	}
 	dpContext, cancel := chromedp.NewExecAllocator(context.Background(), dpOpts...)
 	defer cancel()
