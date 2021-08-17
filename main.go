@@ -329,9 +329,8 @@ func generateToken(ctx context.Context, doLogin bool) (string, error) {
 	req, _ := http.NewRequest(
 		"POST",
 		"https://vaccine-qr.kakao.com/api/v1/qr",
-		nil,
+		strings.NewReader(`{"epURL":null}`),
 	)
-	req.Body = ioutil.NopCloser(strings.NewReader(`{"epURL":null}`))
 	req.Header = http.Header{
 		"User-Agent":   []string{UserAgent},
 		"content-type": []string{"application/json;charset=utf-8"},

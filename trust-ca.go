@@ -19,7 +19,7 @@ var (
 )
 
 func init() {
-	rootCAs, _ := x509.SystemCertPool()
+	rootCAs, _ = x509.SystemCertPool()
 	if rootCAs == nil {
 		return
 	}
